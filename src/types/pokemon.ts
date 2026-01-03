@@ -1,7 +1,7 @@
 export interface Pokemon {
   name: string;
   shakespeareanDescription: string;
-  originalDescription?: string; // Opzionale, per riferimento
+  originalDescription?: string; 
 }
 
 export interface PokemonSpeciesResponse {

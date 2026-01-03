@@ -19,13 +19,12 @@ export const getShakespeareanDescription = async (pokemonName: string): Promise<
         }
 
         const shakespeareanText = await translateToShakespeare(englishEntry.flavor_text);
-        if (!shakespeareanText) {
-            return undefined;
-        }
+        
+        const description = shakespeareanText || englishEntry.flavor_text;
 
         const pokemon: Pokemon = {
             name: speciesData.name,
-            shakespeareanDescription: shakespeareanText,
+            shakespeareanDescription: description,
             originalDescription: englishEntry.flavor_text,
         };
 

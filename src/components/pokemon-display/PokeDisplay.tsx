@@ -2,7 +2,6 @@ import './PokeDisplay.scss';
 import React, { useState, useEffect } from 'react';
 import type { Pokemon } from '../../types/pokemon';
 import { getShakespeareanDescription } from '../../services/pokedisplay';
-import { getCurrentPokemonName } from '../../utils/localStorage';
 
 const PokeDisplay: React.FC = () => {
     const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -26,13 +25,6 @@ const PokeDisplay: React.FC = () => {
     };
 
     useEffect(() => {
-        // Load Pokemon from localStorage on mount
-        const currentPokemonName = getCurrentPokemonName();
-        if (currentPokemonName) {
-            loadPokemon(currentPokemonName);
-        }
-
-        // Listen for search events
         const handlePokemonSearch = (event: CustomEvent) => {
             loadPokemon(event.detail);
         };

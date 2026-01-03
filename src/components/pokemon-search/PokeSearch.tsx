@@ -47,14 +47,12 @@ const PokemonSearch: React.FC = () => {
             return;
         }
 
-        // Save Pokemon name to localStorage
         saveCurrentPokemonName(pokemonName);
 
         searchPokemon(pokemonName).then(data => {
             console.log('Pokemon data:', data);
             setSearch('');
             setShowDropdown(false);
-            // Trigger a custom event to notify PokeDisplay to refresh
             window.dispatchEvent(new CustomEvent('pokemonSearch', { detail: pokemonName }));
         }).catch(error => {
             console.error('Error searching for Pokemon:', error);
