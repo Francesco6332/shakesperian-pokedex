@@ -1,6 +1,6 @@
 import { FAVOURITES_KEY } from '../components/favourites-section/favourites';
 import type { Pokemon } from '../types/pokemon';
-import { envConfig, configStatus } from '../config/environment';
+import { envConfig } from '../config/environment';
 import { 
     addFavouriteToFirebase, 
     removeFavouriteFromFirebase, 
@@ -14,33 +14,25 @@ export type { Favourite };
 
 export async function addToFavourites(pokemon: Pokemon): Promise<Favourite> {
     const useFirebase = envConfig.storage.provider === 'firebase_storage';
-    
-    console.log('🔍 Storage provider configurato:', envConfig.storage.provider);
-    console.log('🔍 Usa Firebase?', useFirebase);
-    console.log('🔍 Firebase configurato?', configStatus.firebase.isValid);
 
     if (useFirebase) {
         try {
-            console.log('📤 Tentativo di salvare in Firebase:', pokemon.name);
             const favourite = await addFavouriteToFirebase({
                 name: pokemon.name,
                 shakespeareanDescription: pokemon.shakespeareanDescription,
                 originalDescription: pokemon.originalDescription,
             });
             if (favourite) {
-                console.log('✅ Favorito salvato in Firebase:', favourite);
                 window.dispatchEvent(new CustomEvent('favouritesChanged'));
                 return favourite;
             }
             throw new Error('Impossibile aggiungere il favorito');
         } catch (error) {
-            console.error('❌ Errore nell\'aggiungere ai favoriti Firebase, uso localStorage:', error);
-            console.error('Dettagli errore:', error instanceof Error ? error.message : error);
+            console.error('Errore nell\'aggiungere ai favoriti Firebase, uso localStorage:', error);
             return addToFavouritesLocal(pokemon);
         }
     }
 
-    console.log('💾 Usando localStorage (provider:', envConfig.storage.provider, ')');
     return addToFavouritesLocal(pokemon);
 }
 
@@ -51,8 +43,6 @@ export async function removeFromFavourites(pokemonName: string): Promise<boolean
         try {
             const success = await removeFavouriteFromFirebase(pokemonName);
             if (success) {
-                console.log('Favorito rimosso da Firebase:', pokemonName);
-                // Notifica che i favoriti sono cambiati
                 window.dispatchEvent(new CustomEvent('favouritesChanged'));
             }
             return success;
@@ -114,8 +104,6 @@ function addToFavouritesLocal(pokemon: Pokemon): Favourite {
     
     try {
         localStorage.setItem(FAVOURITES_KEY, JSON.stringify(savedFavourites));
-        console.log('Favorito salvato in localStorage:', newFavourite);
-        
         window.dispatchEvent(new CustomEvent('favouritesChanged'));
     } catch (error) {
         console.error('Errore nel salvare in localStorage:', error);
@@ -135,8 +123,6 @@ function removeFromFavouritesLocal(pokemonName: string): boolean {
     
     try {
         localStorage.setItem(FAVOURITES_KEY, JSON.stringify(filtered));
-        console.log('Favorito rimosso da localStorage:', pokemonName);
-        
         window.dispatchEvent(new CustomEvent('favouritesChanged'));
     } catch (error) {
         console.error('Errore nel rimuovere da localStorage:', error);

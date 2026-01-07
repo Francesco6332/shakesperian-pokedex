@@ -21,21 +21,13 @@ export interface Favourite {
 const FAVOURITES_COLLECTION = 'favourites';
 
 export async function addFavouriteToFirebase(pokemon: { name: string; shakespeareanDescription: string; originalDescription?: string }): Promise<Favourite | null> {
-    console.log('🔥 addFavouriteToFirebase chiamato');
-    console.log('🔥 db disponibile?', !!db);
-    console.log('🔥 isFirebaseConfigured?', isFirebaseConfigured);
-    
     if (!db || !isFirebaseConfigured) {
-        const error = new Error(`Firebase non è configurato. db: ${!!db}, isFirebaseConfigured: ${isFirebaseConfigured}`);
-        console.error('❌', error.message);
-        throw error;
+        throw new Error('Firebase non è configurato');
     }
 
     try {
-        console.log('🔍 Controllo se il Pokemon esiste già...');
         const existingFavourite = await getFavouriteByName(pokemon.name);
         if (existingFavourite) {
-            console.log('ℹ️ Pokemon già presente nei favoriti:', existingFavourite);
             return existingFavourite;
         }
 
@@ -46,25 +38,14 @@ export async function addFavouriteToFirebase(pokemon: { name: string; shakespear
             createdAt: Timestamp.now(),
         };
 
-        console.log('📝 Dati da salvare:', favouriteData);
-        console.log('📝 Collection:', FAVOURITES_COLLECTION);
-        
         const docRef = await addDoc(collection(db, FAVOURITES_COLLECTION), favouriteData);
         
-        const savedFavourite = {
+        return {
             id: docRef.id,
             ...favouriteData,
         };
-        
-        console.log('✅ Favorito aggiunto a Firestore con ID:', docRef.id);
-        console.log('✅ Dati salvati:', savedFavourite);
-        return savedFavourite;
     } catch (error) {
-        console.error('❌ Errore nell\'aggiungere il favorito a Firestore:', error);
-        if (error instanceof Error) {
-            console.error('❌ Messaggio errore:', error.message);
-            console.error('❌ Stack:', error.stack);
-        }
+        console.error('Errore nell\'aggiungere il favorito a Firestore:', error);
         throw error;
     }
 }

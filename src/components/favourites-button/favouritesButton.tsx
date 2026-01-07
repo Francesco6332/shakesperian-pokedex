@@ -31,7 +31,6 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
     const loadFavouritesCount = async () => {
         try {
             const favourites = await getAllFavourites();
-            console.log('Favoriti caricati:', favourites);
             setFavouritesCount(favourites.length);
         } catch (error) {
             console.error('Errore nel caricare il conteggio dei favoriti:', error);
@@ -50,8 +49,7 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
                     await loadFavouritesCount();
                 }
             } else {
-                const newFavourite = await addToFavourites(pokemon);
-                console.log('Favorito aggiunto:', newFavourite);
+                await addToFavourites(pokemon);
                 setIsFav(true);
                 await loadFavouritesCount();
             }
