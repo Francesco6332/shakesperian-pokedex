@@ -31,6 +31,7 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
     const loadFavouritesCount = async () => {
         try {
             const favourites = await getAllFavourites();
+            console.log('Favoriti caricati:', favourites);
             setFavouritesCount(favourites.length);
         } catch (error) {
             console.error('Errore nel caricare il conteggio dei favoriti:', error);
@@ -46,15 +47,17 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
                 const success = await removeFromFavourites(pokemon.name);
                 if (success) {
                     setIsFav(false);
-                    setFavouritesCount(prev => Math.max(0, prev - 1));
+                    await loadFavouritesCount();
                 }
             } else {
-                await addToFavourites(pokemon);
+                const newFavourite = await addToFavourites(pokemon);
+                console.log('Favorito aggiunto:', newFavourite);
                 setIsFav(true);
-                setFavouritesCount(prev => prev + 1);
+                await loadFavouritesCount();
             }
         } catch (error) {
             console.error('Errore nel gestire il favorito:', error);
+            alert('Errore nel salvare il favorito. Controlla la console per maggiori dettagli.');
         } finally {
             setIsLoading(false);
         }

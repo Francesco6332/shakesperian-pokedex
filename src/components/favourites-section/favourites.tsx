@@ -10,6 +10,16 @@ const FavouritesSection: React.FC = () => {
 
     useEffect(() => {
         loadFavourites();
+            
+        const handleFavouritesChanged = () => {
+            loadFavourites();
+        };
+        
+        window.addEventListener('favouritesChanged', handleFavouritesChanged);
+        
+        return () => {
+            window.removeEventListener('favouritesChanged', handleFavouritesChanged);
+        };
     }, []);
 
     const loadFavourites = async () => {

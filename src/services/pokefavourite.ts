@@ -82,6 +82,12 @@ export async function isFavourite(pokemonName: string): Promise<boolean> {
 
 function addToFavouritesLocal(pokemon: Pokemon): Favourite {
     const savedFavourites = getFavouritesLocal();
+
+    const existingIndex = savedFavourites.findIndex(fav => fav.name === pokemon.name);
+    if (existingIndex !== -1) {
+        return savedFavourites[existingIndex];
+    }
+    
     const newFavourite: Favourite = {
         id: crypto.randomUUID(),
         name: pokemon.name,
@@ -90,7 +96,17 @@ function addToFavouritesLocal(pokemon: Pokemon): Favourite {
     };
     
     savedFavourites.push(newFavourite);
-    localStorage.setItem(FAVOURITES_KEY, JSON.stringify(savedFavourites));
+    
+    try {
+        localStorage.setItem(FAVOURITES_KEY, JSON.stringify(savedFavourites));
+        console.log('Favorito salvato in localStorage:', newFavourite);
+        
+        window.dispatchEvent(new CustomEvent('favouritesChanged'));
+    } catch (error) {
+        console.error('Errore nel salvare in localStorage:', error);
+        throw error;
+    }
+    
     return newFavourite;
 }
 
@@ -102,7 +118,16 @@ function removeFromFavouritesLocal(pokemonName: string): boolean {
         return false;
     }
     
-    localStorage.setItem(FAVOURITES_KEY, JSON.stringify(filtered));
+    try {
+        localStorage.setItem(FAVOURITES_KEY, JSON.stringify(filtered));
+        console.log('Favorito rimosso da localStorage:', pokemonName);
+        
+        window.dispatchEvent(new CustomEvent('favouritesChanged'));
+    } catch (error) {
+        console.error('Errore nel rimuovere da localStorage:', error);
+        throw error;
+    }
+    
     return true;
 }
 
