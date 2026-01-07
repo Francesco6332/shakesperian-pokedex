@@ -7,6 +7,7 @@ export const FAVOURITES_KEY = 'favourites';
 const FavouritesSection: React.FC = () => {
     const [favourites, setFavourites] = useState<Favourite[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [removingId, setRemovingId] = useState<string | null>(null);
 
     useEffect(() => {
         loadFavourites();
@@ -34,14 +35,23 @@ const FavouritesSection: React.FC = () => {
         }
     };
 
-    const handleRemoveFavourite = async (pokemonName: string) => {
+    const handleRemoveFavourite = async (favouriteId: string, pokemonName: string) => {
+        if (removingId) return; 
+        
+        setRemovingId(favouriteId);
         try {
             const success = await removeFromFavourites(pokemonName);
             if (success) {
-                setFavourites(prev => prev.filter(fav => fav.name !== pokemonName));
+                setFavourites(prev => prev.filter(fav => fav.id !== favouriteId));
+            } else {
+                console.warn('Impossibile rimuovere il favorito:', pokemonName);
+                await loadFavourites();
             }
         } catch (error) {
             console.error('Errore nella rimozione del favorito:', error);
+            await loadFavourites();
+        } finally {
+            setRemovingId(null);
         }
     };
 
@@ -77,10 +87,11 @@ const FavouritesSection: React.FC = () => {
                             </div>
                             <button
                                 className="remove-button"
-                                onClick={() => handleRemoveFavourite(favourite.name)}
+                                onClick={() => handleRemoveFavourite(favourite.id, favourite.name)}
                                 title="Rimuovi dai favoriti"
+                                disabled={removingId === favourite.id}
                             >
-                                ×
+                                {removingId === favourite.id ? '...' : '×'}
                             </button>
                         </li>
                     ))}
