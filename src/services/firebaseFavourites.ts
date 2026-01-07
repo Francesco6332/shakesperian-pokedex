@@ -40,12 +40,15 @@ export async function addFavouriteToFirebase(pokemon: { name: string; shakespear
 
         const docRef = await addDoc(collection(db, FAVOURITES_COLLECTION), favouriteData);
         
-        return {
+        const savedFavourite = {
             id: docRef.id,
             ...favouriteData,
         };
+        
+        console.log('Favorito aggiunto a Firestore con ID:', docRef.id);
+        return savedFavourite;
     } catch (error) {
-        console.error('Errore nell\'aggiungere il favorito:', error);
+        console.error('Errore nell\'aggiungere il favorito a Firestore:', error);
         throw error;
     }
 }

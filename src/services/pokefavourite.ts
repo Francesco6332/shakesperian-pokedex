@@ -23,6 +23,8 @@ export async function addToFavourites(pokemon: Pokemon): Promise<Favourite> {
                 originalDescription: pokemon.originalDescription,
             });
             if (favourite) {
+                console.log('Favorito salvato in Firebase:', favourite);
+                window.dispatchEvent(new CustomEvent('favouritesChanged'));
                 return favourite;
             }
             throw new Error('Impossibile aggiungere il favorito');
@@ -40,7 +42,13 @@ export async function removeFromFavourites(pokemonName: string): Promise<boolean
 
     if (useFirebase) {
         try {
-            return await removeFavouriteFromFirebase(pokemonName);
+            const success = await removeFavouriteFromFirebase(pokemonName);
+            if (success) {
+                console.log('Favorito rimosso da Firebase:', pokemonName);
+                // Notifica che i favoriti sono cambiati
+                window.dispatchEvent(new CustomEvent('favouritesChanged'));
+            }
+            return success;
         } catch (error) {
             console.error('Errore nella rimozione da Firebase, uso localStorage:', error);
             return removeFromFavouritesLocal(pokemonName);
