@@ -1,73 +1,160 @@
-# React + TypeScript + Vite
+# Shakespearian Pokedex 🎭
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application that transforms Pokemon descriptions into Shakespearean poetry. Search for your favorite Pokemon and discover their descriptions translated in the style of the Bard!
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 **Pokemon Search**: Search for any Pokemon with autocomplete functionality
+- 🎭 **Shakespearean Translation**: Descriptions are translated into Shakespeare's style
+- ❤️ **Favorites System**: Save your favorite Pokemon
+- 💾 **Flexible Storage**: Supports Firebase Firestore or localStorage
+- 🎨 **Pokemon-themed Design**: UI inspired by classic Pokemon games
 
-## React Compiler
+## 🛠️ Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
+- **React 19.2.0** - UI library for building user interfaces
+- **TypeScript 5.9.3** - JavaScript superset with static typing
+- **Vite 7.2.4** - Fast and modern build tool for frontend development
+- **SCSS** - CSS preprocessor for modular styling
 
-## Expanding the ESLint configuration
+### Backend & Storage
+- **Firebase Firestore** - Cloud NoSQL database for favorites persistence
+- **LocalStorage** - Browser local storage (fallback)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### External APIs
+- **PokeAPI** - Free and open-source API for Pokemon data
+- **FunTranslations API** - API for Shakespeare-style translations
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Development Tools
+- **ESLint** - Linter for JavaScript/TypeScript
+- **TypeScript ESLint** - ESLint rules specific for TypeScript
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📋 Requirements
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Node.js** >= 18.0.0
+- **npm** >= 9.0.0 (or yarn/pnpm)
+
+## 🚀 Installation and Local Usage
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd shakesperian-pokedex
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+### 3. Configuration (Optional - for Firebase)
+
+To use Firebase as favorites storage, create a `.env.local` file in the project root:
+
+```env
+VITE_STORAGE_PROVIDER=firebase_storage
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+**Note**: If Firebase is not configured, the app will automatically use `localStorage` for favorites.
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### 5. Build for production
+
+```bash
+npm run build
+```
+
+The compiled files will be in the `dist/` folder
+
+### 6. Preview the build
+
+```bash
+npm run preview
+```
+
+## 📜 Available Scripts
+
+- `npm run dev` - Start development server with hot-reload
+- `npm run build` - Build the app for production
+- `npm run preview` - Preview the production build
+- `npm run lint` - Run ESLint to check code quality
+
+## 📁 Project Structure
+
+```
+shakesperian-pokedex/
+├── public/                 # Static files
+│   └── logo.png
+├── src/
+│   ├── assets/            # Images and icons
+│   │   └── icons/
+│   ├── components/        # React components
+│   │   ├── favourites-button/    # Favorites button
+│   │   ├── favourites-section/   # Favorites section
+│   │   ├── pokemon-display/      # Pokemon display
+│   │   └── pokemon-search/       # Search bar
+│   ├── config/            # Configuration files
+│   │   ├── environment.ts        # Environment variables
+│   │   └── firebase.ts           # Firebase configuration
+│   ├── services/          # Business logic
+│   │   ├── firebaseFavourites.ts # Firebase operations
+│   │   ├── pokefavourite.ts      # Favorites management
+│   │   ├── pokedisplay.ts        # Pokemon display logic
+│   │   ├── pokesearch.ts         # Pokemon search
+│   │   └── shakespeareApi.ts     # Translation API
+│   ├── types/             # TypeScript definitions
+│   │   └── pokemon.ts
+│   ├── utils/             # Utilities
+│   │   └── localStorage.ts
+│   ├── App.tsx            # Main component
+│   └── main.tsx           # Entry point
+├── .env.local             # Local environment variables (don't commit)
+├── package.json
+├── vite.config.ts         # Vite configuration
+└── tsconfig.json          # TypeScript configuration
+```
+
+## 🔧 Firebase Configuration (Optional)
+
+1. Create a project on [Firebase Console](https://console.firebase.google.com/)
+2. Enable Firestore Database
+3. Configure security rules:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /favourites/{document=**} {
+      allow read, write: if true; // For development
+    }
+  }
+}
+```
+
+4. Get credentials from your Firebase project
+5. Add environment variables to the `.env.local` file
+
+## 📝 Notes
+
+- FunTranslations API has a rate limit of ~5 requests/hour without an API key. For intensive use, consider obtaining an API key.
+- PokeAPI is free and doesn't require authentication.
+- For production on Vercel, configure environment variables in the Vercel dashboard.
+
+## 📄 License
