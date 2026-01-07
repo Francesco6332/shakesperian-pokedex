@@ -75,12 +75,18 @@ export const configStatus = {
     firebase: validateFirebaseConfig(envConfig.firebase),
 }
 
-if(import.meta.env.DEV && false) {
+if(import.meta.env.DEV) {
     console.log('🔧 Environment Configuration:', {
         storageProvider: envConfig.storage.provider,
         firebase: {
             configured: configStatus.firebase.isValid,
             projectId: envConfig.firebase.projectId,
+            missingFields: configStatus.firebase.missingFields,
         },
     });
+    
+    if (envConfig.storage.provider !== 'firebase_storage') {
+        console.warn('⚠️ VITE_STORAGE_PROVIDER non è impostato su "firebase_storage".');
+        console.warn('⚠️ Imposta VITE_STORAGE_PROVIDER=firebase_storage per usare Firebase.');
+    }
 }

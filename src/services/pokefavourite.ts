@@ -1,6 +1,6 @@
 import { FAVOURITES_KEY } from '../components/favourites-section/favourites';
 import type { Pokemon } from '../types/pokemon';
-import { envConfig } from '../config/environment';
+import { envConfig, configStatus } from '../config/environment';
 import { 
     addFavouriteToFirebase, 
     removeFavouriteFromFirebase, 
@@ -14,26 +14,33 @@ export type { Favourite };
 
 export async function addToFavourites(pokemon: Pokemon): Promise<Favourite> {
     const useFirebase = envConfig.storage.provider === 'firebase_storage';
+    
+    console.log('🔍 Storage provider configurato:', envConfig.storage.provider);
+    console.log('🔍 Usa Firebase?', useFirebase);
+    console.log('🔍 Firebase configurato?', configStatus.firebase.isValid);
 
     if (useFirebase) {
         try {
+            console.log('📤 Tentativo di salvare in Firebase:', pokemon.name);
             const favourite = await addFavouriteToFirebase({
                 name: pokemon.name,
                 shakespeareanDescription: pokemon.shakespeareanDescription,
                 originalDescription: pokemon.originalDescription,
             });
             if (favourite) {
-                console.log('Favorito salvato in Firebase:', favourite);
+                console.log('✅ Favorito salvato in Firebase:', favourite);
                 window.dispatchEvent(new CustomEvent('favouritesChanged'));
                 return favourite;
             }
             throw new Error('Impossibile aggiungere il favorito');
         } catch (error) {
-            console.error('Errore nell\'aggiungere ai favoriti Firebase, uso localStorage:', error);
+            console.error('❌ Errore nell\'aggiungere ai favoriti Firebase, uso localStorage:', error);
+            console.error('Dettagli errore:', error instanceof Error ? error.message : error);
             return addToFavouritesLocal(pokemon);
         }
     }
 
+    console.log('💾 Usando localStorage (provider:', envConfig.storage.provider, ')');
     return addToFavouritesLocal(pokemon);
 }
 
