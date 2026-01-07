@@ -7,23 +7,20 @@ export const translateToShakespeare = async (text: string): Promise<string | und
             return undefined;
         }
         
-        const formData = new URLSearchParams();
-        formData.append('text', cleanText);
+        const encodedText = encodeURIComponent(cleanText);
+        const url = `https://api.funtranslations.com/translate/shakespeare.json?text=${encodedText}`;
         
-        const response = await fetch('https://api.funtranslations.com/translate/shakespeare.json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData,
+        const response = await fetch(url, {
+            method: 'GET',
         });
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            console.warn(`HTTP error! status: ${response.status}`, errorData);
             
             if (response.status === 429) {
                 console.warn('Rate limit raggiunto per Shakespeare API. Usando testo originale.');
+            } else {
+                console.warn(`HTTP error! status: ${response.status}`, errorData);
             }
             return undefined;
         }
