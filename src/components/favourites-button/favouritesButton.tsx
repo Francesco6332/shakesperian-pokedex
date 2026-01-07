@@ -3,7 +3,7 @@ import './favouritesButton.scss';
 import HeartIcon from '../../assets/icons/heart.svg';
 import { useState, useEffect } from 'react';
 import type { Pokemon } from '../../types/pokemon';
-import { addToFavourites, removeFromFavourites, isFavourite, getAllFavourites } from '../../services/pokefavourite';
+import { addToFavourites, removeFromFavourites, isFavourite} from '../../services/pokefavourite';
 
 interface FavouritesButtonProps {
     pokemon: Pokemon;
