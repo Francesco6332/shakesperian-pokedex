@@ -12,11 +12,19 @@ interface FavouritesButtonProps {
 export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) => {
     const [isFav, setIsFav] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [favouritesCount, setFavouritesCount] = useState<number>(0);
 
     useEffect(() => {
         loadFavouriteState();
-        loadFavouritesCount();
+        
+        const handleFavouritesChanged = () => {
+            loadFavouriteState();
+        };
+        
+        window.addEventListener('favouritesChanged', handleFavouritesChanged);
+        
+        return () => {
+            window.removeEventListener('favouritesChanged', handleFavouritesChanged);
+        };
     }, [pokemon.name]);
 
     const loadFavouriteState = async () => {
@@ -28,14 +36,7 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
         }
     };
 
-    const loadFavouritesCount = async () => {
-        try {
-            const favourites = await getAllFavourites();
-            setFavouritesCount(favourites.length);
-        } catch (error) {
-            console.error('Errore nel caricare il conteggio dei favoriti:', error);
-        }
-    };
+   
 
     const handleToggleFavourite = async () => {
         if (isLoading) return;
@@ -46,12 +47,10 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
                 const success = await removeFromFavourites(pokemon.name);
                 if (success) {
                     setIsFav(false);
-                    await loadFavouritesCount();
                 }
             } else {
                 await addToFavourites(pokemon);
                 setIsFav(true);
-                await loadFavouritesCount();
             }
         } catch (error) {
             console.error('Errore nel gestire il favorito:', error);
@@ -71,7 +70,6 @@ export const FavouritesButton: React.FC<FavouritesButtonProps> = ({ pokemon }) =
             <div className="heart-icon-wrapper">
                 <img src={HeartIcon} alt="Heart" className={isFav ? 'active' : ''} />
             </div>
-            <span className="favourites-count">{favouritesCount}</span>
         </button>
     );
 };
