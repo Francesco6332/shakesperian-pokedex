@@ -2,6 +2,7 @@ import './PokeDisplay.scss';
 import React, { useState, useEffect } from 'react';
 import type { Pokemon } from '../../types/pokemon';
 import { getShakespeareanDescription } from '../../services/pokedisplay';
+import { FavouritesButton } from '../favourites-button/favouritesButton';
 
 const PokeDisplay: React.FC = () => {
     const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -62,7 +63,10 @@ const PokeDisplay: React.FC = () => {
 
     return (
         <div className="poke-display-container">
-            <h1>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
+            <div className="pokemon-header">
+                <h1>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
+                <FavouritesButton pokemon={pokemon} />
+            </div>
             <p className="description">{pokemon.shakespeareanDescription}</p>
         </div>
     );

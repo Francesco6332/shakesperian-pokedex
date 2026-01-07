@@ -1,6 +1,7 @@
 import './App.css'
 import PokemonSearch from './components/pokemon-search/PokeSearch'
 import PokeDisplay from './components/pokemon-display/PokeDisplay'
+import FavouritesSection from './components/favourites-section/favourites'
 
 function App() {
 
@@ -11,6 +12,9 @@ function App() {
       </div>
       <div className="results-section">
         <PokeDisplay />
+      </div>
+      <div className="favourites-section">
+        <FavouritesSection />
       </div>
     </div>
   )
