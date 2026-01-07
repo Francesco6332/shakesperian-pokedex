@@ -69,7 +69,7 @@ const FavouritesSection: React.FC = () => {
             <h2>Favourites ({favourites.length})</h2>
             
             {favourites.length === 0 ? (
-                <p className="empty-message">Nessun favorito salvato</p>
+                <p className="empty-message">No Favourites Saved</p>
             ) : (
                 <ul className="favourites-list">
                     {favourites.map((favourite) => (
@@ -81,7 +81,7 @@ const FavouritesSection: React.FC = () => {
                                 </p>
                                 {favourite.originalDescription && (
                                     <p className="favourite-original">
-                                        Originale: {favourite.originalDescription}
+                                        Original: {favourite.originalDescription}
                                     </p>
                                 )}
                             </div>
